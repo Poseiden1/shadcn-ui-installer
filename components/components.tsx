@@ -1,3 +1,6 @@
+import { useState } from "react"
+import { CopyIcon, MousePointerClickIcon } from "lucide-react"
+
 import { AccordionCard } from "@/components/cards/accordion-card"
 import { AlertCard } from "@/components/cards/alert-card"
 import { AlertDialogCard } from "@/components/cards/alert-dialog"
@@ -34,44 +37,64 @@ import { ToastCard } from "@/components/cards/toast-card"
 import { ToggleCard } from "@/components/cards/toggle-card"
 import { TooltipCard } from "@/components/cards/tooltip-card"
 
+import { PickCardProvider } from "./pick-card-provider"
+import { Button } from "./ui/button"
+import { Card } from "./ui/card"
+
 export default function Components() {
+  const [activeCards, setActiveCards] = useState({})
   return (
-    <div className="grid items-center gap-6 grid-cols-1 md:grid-cols-2 2xl:grid-cols-3">
-      <AccordionCard />
-      <AlertCard />
-      <AlertDialogCard />
-      <AspectRatioCard />
-      <AvatarCard />
-      <BadgeCard />
-      <ButtonCard />
-      <CardCard />
-      <CheckboxCard />
-      <CollapsibleCard />
-      <ComboboxCard />
-      <CommandCard />
-      <ContextMenuCard />
-      <DataTableCard />
-      <DialogCard />
-      <DropdownMenuCard />
-      <HoverCardCard />
-      <InputCard />
-      <MenubarCard />
-      <NavigationMenuCard />
-      <PopoverCard />
-      <ProgressCard />
-      <RadioGroupCard />
-      <ScrollAreaCard />
-      <SelectCard />
-      <SeparatorCard />
-      <SheetCard />
-      <SkeletonCard />
-      <SwitchCard />
-      <TableCard />
-      <TabsCard />
-      <TextareaCard />
-      <ToastCard />
-      <ToggleCard />
-      <TooltipCard />
-    </div>
+    <PickCardProvider>
+      <div className="flex flex-row gap-4 justify-start items-start w-full h-16">
+        <Button
+          variant={"outline"}
+          className="h-12 w-42 fixed bottom-4 right-4"
+        >
+          <CopyIcon className="w-4 h-4 mr-2" />
+          <span className="text-xl">Copy Script</span>
+        </Button>
+        <Button variant={"outline"} className="h-12 w-42">
+          <MousePointerClickIcon className="w-4 h-4 mr-2" />
+          <span className="text-xl">Select all</span>
+        </Button>
+      </div>
+      <div className="grid items-center gap-6 grid-cols-1 md:grid-cols-2 2xl:grid-cols-3">
+        <AccordionCard />
+        <AlertCard />
+        <AlertDialogCard />
+        <AspectRatioCard />
+        <AvatarCard />
+        <BadgeCard />
+        <ButtonCard />
+        <CardCard />
+        <CheckboxCard />
+        <CollapsibleCard />
+        <ComboboxCard />
+        <CommandCard />
+        <ContextMenuCard />
+        <DataTableCard />
+        <DialogCard />
+        <DropdownMenuCard />
+        <HoverCardCard />
+        <InputCard />
+        <MenubarCard />
+        <NavigationMenuCard />
+        <PopoverCard />
+        <ProgressCard />
+        <RadioGroupCard />
+        <ScrollAreaCard />
+        <SelectCard />
+        <SeparatorCard />
+        <SheetCard />
+        <SkeletonCard />
+        <SwitchCard />
+        <TableCard />
+        <TabsCard />
+        <TextareaCard />
+        <ToastCard />
+        <ToggleCard />
+        <TooltipCard />
+      </div>
+    </PickCardProvider>
   )
 }
