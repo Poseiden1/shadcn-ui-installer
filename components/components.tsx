@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { CopyIcon, MousePointerClickIcon } from "lucide-react"
 
 import { AccordionCard } from "@/components/cards/accordion-card"
@@ -37,26 +37,108 @@ import { ToastCard } from "@/components/cards/toast-card"
 import { ToggleCard } from "@/components/cards/toggle-card"
 import { TooltipCard } from "@/components/cards/tooltip-card"
 
-import { PickCardProvider } from "./pick-card-provider"
+import { PickCardContext } from "./pick-card-provider"
 import { Button } from "./ui/button"
 import { Card } from "./ui/card"
+import { Label } from "./ui/label"
 
-export default function Components() {
-  const [activeCards, setActiveCards] = useState({})
+export default function Components(props: { os: string; pm: string }) {
+  const { activeCards, toggleCard } = useContext(PickCardContext)
+  const [countCards, setCountCards] = useState<number>(0)
+
+  useEffect(() => {
+    let count = 0
+    for (let card in activeCards) {
+      if (activeCards[card as keyof typeof activeCards]) {
+        count++
+      }
+    }
+    setCountCards(count)
+  }, [activeCards])
+  const toggleAll = () => {
+    for (let card in activeCards) {
+      toggleCard(card)
+    }
+  }
+
+  const copyScript = () => {
+    let script = ""
+    let pmx = ""
+    switch (props.pm) {
+      case "npm":
+        pmx = "npx"
+        break
+      case "yarn":
+        pmx = "yarn"
+        break
+      case "pnpm":
+        pmx = "pnpx"
+        break
+      case "bun":
+        pmx = "bunx"
+        break
+    }
+
+    switch (props.os) {
+      case "linux2":
+        script += "#!/bin/bash\n\n"
+        script += "# List of components\ncomponents=(\n"
+        for (let card in activeCards) {
+          if (activeCards[card as keyof typeof activeCards]) {
+            script += `    "${card}"\n`
+          }
+        }
+        script += ")\n\n#Loop through each component and install it\n"
+        script += 'for component in "${components[@]}"; do\n'
+        script += '    echo "Installing $component..."\n'
+        script += `    echo yes | ${pmx} shadcn-ui@latest add $component\n`
+        script += '    echo "$component installed!"\n'
+        script += "done\n\n"
+        script += 'echo "All components installed!"'
+        break
+      case "mac":
+      case "linux":
+        script += "#!/bin/bash\n\n"
+        script += "# List of components\ncomponents=(\n"
+        for (let card in activeCards) {
+          if (activeCards[card as keyof typeof activeCards]) {
+            script += `    "${card}"\n`
+          }
+        }
+        script += ")\n\n"
+        script += "install_component() {\n"
+        script += '    component="$1"\n'
+        script += `    echo yes | ${pmx} shadcn-ui@latest add "$component" --overwrite\n}\n\n`
+        script += "export -f install_component\n\n"
+        script +=
+          'printf "%s\\n" "${components[@]}" | xargs -I {} bash -c \'install_component "$@"\' _ {}\n\n'
+        script += 'echo "All components installed!"'
+        break
+    }
+    console.log(script)
+    navigator.clipboard.writeText(script)
+  }
+
   return (
-    <PickCardProvider>
-      <div className="flex flex-row gap-4 justify-start items-start w-full h-16">
+    <>
+      <div className="flex flex-row gap-4 justify-start items-center w-full h-16">
         <Button
+          onClick={copyScript}
           variant={"outline"}
           className="h-12 w-42 fixed bottom-4 right-4"
         >
           <CopyIcon className="w-4 h-4 mr-2" />
           <span className="text-xl">Copy Script</span>
         </Button>
-        <Button variant={"outline"} className="h-12 w-42">
+        <Button variant={"outline"} className="h-12 w-42" onClick={toggleAll}>
           <MousePointerClickIcon className="w-4 h-4 mr-2" />
-          <span className="text-xl">Select all</span>
+          <span className="text-xl">Toggle all</span>
         </Button>
+        <Card className="text-xl h-12 w-64 px-4 flex flex-row gap-4 items-center justify-center">
+          <span>selected:</span>
+          <span className="font-bold">{countCards.toString()}</span>/
+          <span>{Object.keys(activeCards).length}</span>
+        </Card>
       </div>
       <div className="grid items-center gap-6 grid-cols-1 md:grid-cols-2 2xl:grid-cols-3">
         <AccordionCard />
@@ -95,6 +177,6 @@ export default function Components() {
         <ToggleCard />
         <TooltipCard />
       </div>
-    </PickCardProvider>
+    </>
   )
 }

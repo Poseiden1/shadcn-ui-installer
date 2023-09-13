@@ -23,6 +23,11 @@ export const metadata: Metadata = {
     shortcut: "/favicon-16x16.png",
     apple: "/apple-touch-icon.png",
   },
+  viewport: {
+    initialScale: 0.8,
+    maximumScale: 0.8,
+    userScalable: false,
+  },
 }
 
 interface RootLayoutProps {

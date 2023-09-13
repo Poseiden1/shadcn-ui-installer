@@ -19,11 +19,11 @@ export default function PickCard(props: PickCardProps) {
   // add border if state is active
   return (
     <Card
-      onClick={() => toggleCard(props.title)}
+      onClick={() => toggleCard(props.title.toLowerCase().replace(" ", "-"))}
       className={
         `w-full h-96 pb-16 px-12 pt-24 2xl:pb:12 relative flex items-center justify-center ` +
         // @ts-ignore TODO: fix noImplicitAny error here
-        (activeCards[props.title]
+        (activeCards[props.title.toLowerCase().replace(" ", "-")]
           ? "border-2 border-primary"
           : "border-2 border-primary-foreground")
       }
