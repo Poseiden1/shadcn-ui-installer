@@ -64,7 +64,6 @@ export default function Components(props: { os: string; pm: string }) {
     }
   }
 
-
   const generateScript = () => {
     let script = ""
     let pmx = ""
@@ -192,9 +191,7 @@ export default function Components(props: { os: string; pm: string }) {
             You have to initalize shadcn/ui first.
           </p>
         </div>
-        <Card className="flex flex-row p-4 bg-slate-900 text-white">
-          <code className="language-bash">npx shadcn-ui@latest init</code>
-        </Card>
+        <CopyCard text="npx shadcn-ui@latest init" />
         <p className="max-w-[700px] text-xl text-muted-foreground">
           Create a new file in the folder called
           <code className="border border-primary rounded-md p-1 mx-2">
@@ -202,7 +199,13 @@ export default function Components(props: { os: string; pm: string }) {
           </code>
           and paste the following bash script:
         </p>
-        <CopyCard text={outputScript == "" ? "No script yet. Please select some components." : outputScript}/>
+        <CopyCard
+          text={
+            outputScript == ""
+              ? "No script yet. Please select some components."
+              : outputScript
+          }
+        />
         <p className="max-w-[700px] text-xl text-muted-foreground">
           Ensure the script has execute permissions.
         </p>
