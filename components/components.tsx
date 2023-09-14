@@ -1,5 +1,5 @@
-import { useContext, useEffect, useState } from "react"
-import { CopyIcon, MousePointerClickIcon } from "lucide-react"
+import { useContext, useEffect, useRef, useState } from "react"
+import { ArrowDown, CopyIcon, MousePointerClickIcon } from "lucide-react"
 
 import { AccordionCard } from "@/components/cards/accordion-card"
 import { AlertCard } from "@/components/cards/alert-card"
@@ -37,6 +37,7 @@ import { ToastCard } from "@/components/cards/toast-card"
 import { ToggleCard } from "@/components/cards/toggle-card"
 import { TooltipCard } from "@/components/cards/tooltip-card"
 
+import CopyCard from "./copy-card"
 import { PickCardContext } from "./pick-card-provider"
 import { Button } from "./ui/button"
 import { Card } from "./ui/card"
@@ -45,7 +46,8 @@ import { Label } from "./ui/label"
 export default function Components(props: { os: string; pm: string }) {
   const { activeCards, toggleCard } = useContext(PickCardContext)
   const [countCards, setCountCards] = useState<number>(0)
-
+  const [outputScript, setOutputScript] = useState<string>("")
+  const installerRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
     let count = 0
     for (let card in activeCards) {
@@ -54,6 +56,7 @@ export default function Components(props: { os: string; pm: string }) {
       }
     }
     setCountCards(count)
+    generateScript()
   }, [activeCards])
   const toggleAll = () => {
     for (let card in activeCards) {
@@ -61,7 +64,8 @@ export default function Components(props: { os: string; pm: string }) {
     }
   }
 
-  const copyScript = () => {
+
+  const generateScript = () => {
     let script = ""
     let pmx = ""
     switch (props.pm) {
@@ -111,24 +115,27 @@ export default function Components(props: { os: string; pm: string }) {
         script += `    echo yes | ${pmx} shadcn-ui@latest add "$component" --overwrite\n}\n\n`
         script += "export -f install_component\n\n"
         script +=
-          'printf "%s\\n" "${components[@]}" | xargs -I {} bash -c \'install_component "$@"\' _ {}\n\n'
+          'printf "%s\\n" "${components[@]}" | xargs -I {} -P 8 bash -c \'install_component "$@"\' _ {}\n\n'
         script += 'echo "All components installed!"'
         break
     }
-    console.log(script)
-    navigator.clipboard.writeText(script)
+    setOutputScript(script)
   }
-
+  const scrollToInstaller = () => {
+    installerRef.current?.scrollIntoView({
+      behavior: "smooth",
+    })
+  }
   return (
     <>
       <div className="flex flex-row gap-4 justify-start items-center w-full h-16">
         <Button
-          onClick={copyScript}
+          onClick={scrollToInstaller}
           variant={"outline"}
-          className="h-12 w-42 fixed bottom-4 right-4"
+          className="h-12 w-42 fixed bottom-4 right-4 z-50"
         >
-          <CopyIcon className="w-4 h-4 mr-2" />
-          <span className="text-xl">Copy Script</span>
+          <ArrowDown className="w-4 h-4 mr-2" />
+          <span className="text-xl">Scroll to Script</span>
         </Button>
         <Button variant={"outline"} className="h-12 w-42" onClick={toggleAll}>
           <MousePointerClickIcon className="w-4 h-4 mr-2" />
@@ -151,7 +158,6 @@ export default function Components(props: { os: string; pm: string }) {
         <CardCard />
         <CheckboxCard />
         <CollapsibleCard />
-        <ComboboxCard />
         <CommandCard />
         <ContextMenuCard />
         <DataTableCard />
@@ -176,6 +182,35 @@ export default function Components(props: { os: string; pm: string }) {
         <ToastCard />
         <ToggleCard />
         <TooltipCard />
+      </div>
+      <div className="flex flex-col gap-4 mt-8" ref={installerRef}>
+        <div className="flex flex-col gap-4">
+          <h1 className="text-3xl font-bold leading-tight tracking-tighter md:text-4xl">
+            4. Install your components.
+          </h1>
+          <p className="max-w-[700px] text-xl text-muted-foreground">
+            You have to initalize shadcn/ui first.
+          </p>
+        </div>
+        <Card className="flex flex-row p-4 bg-slate-900 text-white">
+          <code className="language-bash">npx shadcn-ui@latest init</code>
+        </Card>
+        <p className="max-w-[700px] text-xl text-muted-foreground">
+          Create a new file in the folder called
+          <code className="border border-primary rounded-md p-1 mx-2">
+            installer.sh
+          </code>
+          and paste the following bash script:
+        </p>
+        <CopyCard text={outputScript == "" ? "No script yet. Please select some components." : outputScript}/>
+        <p className="max-w-[700px] text-xl text-muted-foreground">
+          Ensure the script has execute permissions.
+        </p>
+        <CopyCard text="chmod +x installer.sh" />
+        <p className="max-w-[700px] text-xl text-muted-foreground">
+          Run the script, enjoy!
+        </p>
+        <CopyCard text="./installer.sh" />
       </div>
     </>
   )

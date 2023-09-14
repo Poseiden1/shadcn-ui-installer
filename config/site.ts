@@ -1,9 +1,9 @@
 export type SiteConfig = typeof siteConfig
 
 export const siteConfig = {
-  name: "Next.js",
+  name: "Shadcn / UI Installer",
   description:
-    "Beautifully designed components built with Radix UI and Tailwind CSS.",
+    "Shadcn UI Installer is a UI Installer for Shadcn UI.",
   mainNav: [
     
   ],

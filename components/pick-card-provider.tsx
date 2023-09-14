@@ -11,7 +11,6 @@ type PickCardStates = {
   card: boolean
   checkbox: boolean
   collapsible: boolean
-  combobox: boolean
   command: boolean
   "context-menu": boolean
   "data-table": boolean
@@ -55,7 +54,6 @@ export function PickCardProvider({ children }: { children: ReactNode }) {
     card: false,
     checkbox: false,
     collapsible: false,
-    combobox: false,
     command: false,
     "context-menu": false,
     "data-table": false,
