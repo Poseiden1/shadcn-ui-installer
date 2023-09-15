@@ -105,7 +105,9 @@ export default function Components(props: { os: string; pm: string }) {
         script += '    component="$1"\n'
         script += `    echo yes | ${pmx} shadcn-ui@latest add "$component" --overwrite\n}\n\n`
         script += "export -f install_component\n\n"
+        if(activeCards["data-table"]) {
         script += `echo ${props.pm} install @tanstack/react-table\n`
+        }
         script +=
           'printf "%s\\n" "${components[@]}" | xargs -I {} -P 8 bash -c \'install_component "$@"\' _ {}\n\n'
         script += 'echo "All components installed!"'
