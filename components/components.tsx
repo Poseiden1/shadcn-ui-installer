@@ -1,6 +1,8 @@
 import { useContext, useEffect, useRef, useState } from "react"
+import Link from "next/link"
 import { ArrowDown, CopyIcon, MousePointerClickIcon } from "lucide-react"
 
+import { siteConfig } from "@/config/site"
 import { AccordionCard } from "@/components/cards/accordion-card"
 import { AlertCard } from "@/components/cards/alert-card"
 import { AlertDialogCard } from "@/components/cards/alert-dialog"
@@ -188,7 +190,14 @@ export default function Components(props: { os: string; pm: string }) {
             4. Install your components.
           </h1>
           <p className="max-w-[700px] text-xl text-muted-foreground">
-            You have to initalize shadcn/ui first.
+            You have to initalize{" "}
+            <Link
+              href={siteConfig.links.docs}
+              className="underline text-secondary-foreground"
+            >
+              Shadcn/UI
+            </Link>{" "}
+            first.
           </p>
         </div>
         <CopyCard text="npx shadcn-ui@latest init" />

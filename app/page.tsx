@@ -17,7 +17,7 @@ import { PickCardProvider } from "@/components/pick-card-provider"
 
 export default function IndexPage() {
   const [pm, setPm] = useState<string>("npm")
-  const [os, setOs] = useState<string>("windows")
+  const [os, setOs] = useState<string>("linux")
 
   return (
     <section className="container grid items-center gap-6 pb-8 pt-6 md:py-10">
@@ -71,14 +71,14 @@ export default function IndexPage() {
         <div className="flex flex-row gap-4 mt-8">
           <div className="flex flex-col gap-4">
             <h1 className="text-3xl font-bold leading-tight tracking-tighter md:text-4xl">
-              1. Pick your operating system.
+              1. Pick your command language.
             </h1>
             <p className="max-w-[700px] text-xl text-muted-foreground">
-              Depending on your operating system, the installation process will
+              Depending on your command language, the installation command will
               be different.
             </p>
             <p className="max-w-[700px] text-xl text-muted-foreground">
-              Note: If you are using windows, I highly recommend using{" "}
+              Note: If you are using windows, you have to use{" "}
               <Link
                 href="https://gitforwindows.org/"
                 className="underline text-secondary-foreground"
@@ -94,18 +94,9 @@ export default function IndexPage() {
               }}
             >
               <div className="flex items-center space-x-2">
-                <RadioGroupItem value="windows" id="os1" />
-                <Label htmlFor="os1" className="text-xl">
-                  Windows{" "}
-                  <span className="text-base text-muted-foreground">
-                    (Shell)
-                  </span>
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2">
                 <RadioGroupItem value="linux" id="os2" />
                 <Label htmlFor="os2" className="text-xl">
-                  Linux / macOS{" "}
+                  Windows / Linux / macOS{" "}
                   <span className="text-base text-muted-foreground">
                     (Bash)
                   </span>
@@ -125,7 +116,14 @@ export default function IndexPage() {
               components.
             </p>
             <p className="max-w-[700px] text-xl text-muted-foreground">
-              Note: Bun will <code>not</code> work on windows.
+              Note:{" "}
+              <Link
+                href="https://bun.sh/"
+                className="underline text-secondary-foreground"
+              >
+                bun
+              </Link>{" "}
+              will <code>not</code> work on Windows.
             </p>
             <RadioGroup
               defaultValue="bun"
