@@ -6,7 +6,7 @@ import PickCard from "../pick-card"
 
 export function TextareaCard() {
   return (
-    <PickCard title="Text Area">
+    <PickCard title="Textarea">
       <Textarea placeholder="Type your message here." />
     </PickCard>
   )

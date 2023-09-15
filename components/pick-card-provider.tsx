@@ -31,7 +31,7 @@ type PickCardStates = {
   switch: boolean
   table: boolean
   tabs: boolean
-  "text-area": boolean
+  textarea: boolean
   toast: boolean
   toggle: boolean
   tooltip: boolean
@@ -74,7 +74,7 @@ export function PickCardProvider({ children }: { children: ReactNode }) {
     switch: false,
     table: false,
     tabs: false,
-    "text-area": false,
+    textarea: false,
     toast: false,
     toggle: false,
     tooltip: false,

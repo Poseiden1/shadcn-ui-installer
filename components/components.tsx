@@ -34,7 +34,7 @@ import { SkeletonCard } from "@/components/cards/skeleton-card"
 import { SwitchCard } from "@/components/cards/switch-card"
 import { TableCard } from "@/components/cards/table-card"
 import { TabsCard } from "@/components/cards/tabs-card"
-import { TextareaCard } from "@/components/cards/text-area-card"
+import { TextareaCard } from "@/components/cards/textarea-card"
 import { ToastCard } from "@/components/cards/toast-card"
 import { ToggleCard } from "@/components/cards/toggle-card"
 import { TooltipCard } from "@/components/cards/tooltip-card"
@@ -85,28 +85,18 @@ export default function Components(props: { os: string; pm: string }) {
     }
 
     switch (props.os) {
-      case "linux2":
-        script += "#!/bin/bash\n\n"
-        script += "# List of components\ncomponents=(\n"
-        for (let card in activeCards) {
-          if (activeCards[card as keyof typeof activeCards]) {
-            script += `    "${card}"\n`
-          }
-        }
-        script += ")\n\n#Loop through each component and install it\n"
-        script += 'for component in "${components[@]}"; do\n'
-        script += '    echo "Installing $component..."\n'
-        script += `    echo yes | ${pmx} shadcn-ui@latest add $component\n`
-        script += '    echo "$component installed!"\n'
-        script += "done\n\n"
-        script += 'echo "All components installed!"'
-        break
       case "mac":
       case "linux":
         script += "#!/bin/bash\n\n"
         script += "# List of components\ncomponents=(\n"
+        // Check if data-table is selected
+        if (activeCards["data-table"] && !activeCards["table"]) {
+          script += `    "table"\n`
+        }
+
         for (let card in activeCards) {
           if (activeCards[card as keyof typeof activeCards]) {
+            if (card == "data-table") continue
             script += `    "${card}"\n`
           }
         }
@@ -115,6 +105,7 @@ export default function Components(props: { os: string; pm: string }) {
         script += '    component="$1"\n'
         script += `    echo yes | ${pmx} shadcn-ui@latest add "$component" --overwrite\n}\n\n`
         script += "export -f install_component\n\n"
+        script += `echo ${props.pm} install @tanstack/react-table\n`
         script +=
           'printf "%s\\n" "${components[@]}" | xargs -I {} -P 8 bash -c \'install_component "$@"\' _ {}\n\n'
         script += 'echo "All components installed!"'
